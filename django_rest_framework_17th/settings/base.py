@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'accounts',
     'boards',
     'tag',
+    'timetable',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +63,9 @@ ROOT_URLCONF = 'django_rest_framework_17th.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,6 +77,9 @@ TEMPLATES = [
         },
     },
 ]
+
+import rest_framework
+TEMPLATES[0]['DIRS'] += [os.path.join(os.path.dirname(rest_framework.__file__), 'templates')]
 
 WSGI_APPLICATION = 'django_rest_framework_17th.wsgi.application'
 
