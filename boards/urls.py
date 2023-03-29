@@ -5,3 +5,4 @@ urlpatterns = [
     path('write/', board_write, name='board_write'),
     path('detail/<int:pk>/', board_detail, name='board_detail'),
 ]
+
