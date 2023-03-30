@@ -12,6 +12,18 @@
             <span id="tags" class="form-control">
                 {{ board.tags.all|join:"," }}
             </span>
+
+            <form method="POST" action="{% url 'comment_write' board.id %}">
+                {% csrf_token %}
+                {{ comments }}
+                <input type="submit" value="댓글 입력">
+            </form>
+            {% for comment in comment_view %}
+            <hr>
+            <p>{{ comment.author }}</p>
+            <p>{{ comment.comment }}</p>
+            <hr>
+            {% endfor %}
         </div>
         <button class="btn btn-primary" onclick="location.href='/boards/list/'">돌아가기</button>
     </div>
