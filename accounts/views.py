@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password, check_password
 def home(request):
     user_id = request.session.get('username')
     if user_id:
-        user = User.objects.filter(pk=user_id).first()
+        user = User.objects.get(pk=user_id).first()
         if user:
             return HttpResponse("안녕하세요 %s님" % user)
         else:
@@ -22,10 +22,10 @@ def register(request):
 
 
     elif request.method == 'POST':
-        username = request.POST.filter('username', None)
-        useremail = request.POST.filter('useremail', None)
-        password = request.POST.filter('password', None)
-        re_password = request.POST.filter('re_password', None)
+        username = request.POST.get('username', None)
+        useremail = request.POST.get('useremail', None)
+        password = request.POST.get('password', None)
+        re_password = request.POST.get('re_password', None)
 
         err_data = {}
         if not (username and useremail and password and re_password):
