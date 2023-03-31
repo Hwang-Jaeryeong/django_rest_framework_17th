@@ -63,6 +63,7 @@ def comment_write(request, board_id):
     if comment_write.is_valid():
         comments = comment_write.save(commit=False)
         comments.post = get_object_or_404(Board, pk=board_id)
+        # pk를 추가해준것은 게시글 각각의 id값을 통해 board_detail url을 구분해주기위해 추가
         comments.author = user
         comments.save()
     return redirect('board_detail', board_id)

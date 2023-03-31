@@ -26,6 +26,3 @@ class Friend(models.Model):
     def __str__(self):
         return f"{self.user.username} is friends with {self.friend.username}"
 
-# 위 코드에서, Subject 모델은 수업의 이름, 교사, 코드 등을 저장하며,
-# Timetable 모델은 특정 사용자가 어떤 수업을 어떤 날에 언제부터 언제까지 듣는지를 저장합니다.
-# 마지막으로, Friend 모델은 사용자와 그의 친구를 연결하는데 사용됩니다.

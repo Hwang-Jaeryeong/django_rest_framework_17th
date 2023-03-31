@@ -6,13 +6,15 @@ from django.contrib.auth.hashers import make_password, check_password
 
 # 로그인을 했는지 안했는지 알아보기위해 홈화면 간단하게 구성
 def home(request):
-    user_id = request.session.get('user')
+    user_id = request.session.get('username')
     if user_id:
-        user = User.objects.get(pk=user_id)
-        return HttpResponse("안녕하세요 %s님" % user)
+        user = User.objects.filter(pk=user_id).first()
+        if user:
+            return HttpResponse("안녕하세요 %s님" % user)
+        else:
+            return HttpResponse("프로필이 존재하지 않습니다!")
     else:
         return HttpResponse("로그인 후 이용해주세요!")
-
 
 def register(request):
     if request.method == 'GET':
@@ -20,10 +22,10 @@ def register(request):
 
 
     elif request.method == 'POST':
-        username = request.POST.get('username', None)
-        useremail = request.POST.get('useremail', None)
-        password = request.POST.get('password', None)
-        re_password = request.POST.get('re_password', None)
+        username = request.POST.filter('username', None)
+        useremail = request.POST.filter('useremail', None)
+        password = request.POST.filter('password', None)
+        re_password = request.POST.filter('re_password', None)
 
         err_data = {}
         if not (username and useremail and password and re_password):
@@ -39,7 +41,6 @@ def register(request):
                 password=make_password(password),
             )
             user.save()
-
         return render(request, 'register.html', err_data)
 
 def login(request):
@@ -54,6 +55,6 @@ def login(request):
     return render(request, 'login.html', {'form': form})
 
 def logout(request):
-    if request.session.get('user'):
+    if request.session.filter('user'):
         del (request.session['user'])
     return redirect('/')
