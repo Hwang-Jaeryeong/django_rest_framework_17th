@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from accounts.models import User
 
 class Subject(models.Model):
     name = models.CharField(max_length=255)
@@ -8,6 +8,7 @@ class Subject(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.teacher}) {self.code}"
+
 
 class Timetable(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -19,10 +20,10 @@ class Timetable(models.Model):
     def __str__(self):
         return f"{self.user.username}: {self.subject.name} ({self.get_day_display()}) {self.start_time}-{self.end_time}"
 
+
 class Friend(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
-    friend = models.ForeignKey(User, on_delete=models.CASCADE)
+    friend = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.user.username} is friends with {self.friend.username}"
-

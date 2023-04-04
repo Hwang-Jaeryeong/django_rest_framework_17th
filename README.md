@@ -1,6 +1,6 @@
 # CEOS 17기 백엔드 스터디
 
-https://www.notion.so/2-_-0eaa6b8bd3374782ad5299e8ce6a27ac
+https://confused-cantaloupe-b70.notion.site/2-_-0eaa6b8bd3374782ad5299e8ce6a27ac
 : 사진이나 첨부파일(ERD)가 노션에 포함되어 있어 첨부했습니다 !
 
 
