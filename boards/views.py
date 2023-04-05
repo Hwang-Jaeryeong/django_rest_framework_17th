@@ -1,12 +1,93 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
-
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import BoardSerializer, CommentSerializer
 from tag.models import Tag
 from .models import Board, Comment
 from .forms import BoardForm, CommentForm
 from accounts.models import User
 from django.core.paginator import Paginator
 
+class BoardList(APIView):
+    def board(self, request, format=None):
+        serializer = BoardSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, format=None):
+        queryset = Board.objects.all()
+        serializer = BoardSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class BoardDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Board.objects.get(pk=pk)
+        except Board.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        board = self.get_object(pk)
+        serializer = BoardSerializer(board)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        board = self.get_obkect(pk)
+        serializer = BoardSerializer(board, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        board = self.get_object(pk)
+        board.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentList(APIView):
+    def comment(self, request, format=None):
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, format=None):
+        queryset = Comment.objects.all()
+        serializer = CommentSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class CommentDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        comment = self.get_object(pk)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        comment = self.get_obkect(pk)
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        comment = self.get_object(pk)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
