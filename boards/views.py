@@ -16,23 +16,8 @@ from django.core.paginator import Paginator
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-class BoardViewSet(viewsets.ModelViewSet):
-    queryset = Board.objects.all()
-    serializer_class = BoardSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['title', 'author']
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
 
 
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['content', 'author']
-
-"""
 class BoardList(APIView):
     def board(self, request, format=None):
         serializer = BoardSerializer(data=request.data)
@@ -111,7 +96,7 @@ class CommentDetail(APIView):
         comment = self.get_object(pk)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-"""
+
 
 
 def board_write(request):

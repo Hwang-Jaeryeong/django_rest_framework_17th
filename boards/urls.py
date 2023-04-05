@@ -1,4 +1,4 @@
-"""from django.urls import path
+from django.urls import path
 from .views import board_list, board_write, board_detail, comment_write
 from . import views
 
@@ -12,17 +12,3 @@ urlpatterns = [
     path('api/comment/', views.CommentList.as_view()),
     path('api/comment/<int:pk>/', views.CommentDetail.as_view())
 ]
-"""
-
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
-
-router = DefaultRouter()
-router.register(r'board', views.BoardViewSet)
-router.register(r'comment', views.CommentViewSet)
-
-urlpatterns = [
-    path('api/', include(router.urls)),
-]
-
