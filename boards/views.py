@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -17,7 +17,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 
-
+"""
 class BoardList(APIView):
     def board(self, request, format=None):
         serializer = BoardSerializer(data=request.data)
@@ -96,7 +96,7 @@ class CommentDetail(APIView):
         comment = self.get_object(pk)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+"""
 
 
 def board_write(request):

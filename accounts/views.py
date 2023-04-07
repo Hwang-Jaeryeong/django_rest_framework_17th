@@ -4,11 +4,31 @@ from .forms import LoginForm
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import Http404
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer
+from django_filters import rest_framework as filters, FilterSet
+from django_filters.rest_framework import DjangoFilterBackend
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+class UserFilter(FilterSet):
+    user = filters.CharFilter(method='filter_user')
+
+    class Meta:
+        model = User
+        fields = ['username', 'useremail']
+
+    def filter_user(self, queryset, name, value):
+        return queryset.filter(**{
+            name: value,
+        })
+
+"""
 class UserList(APIView):
 
     def user(self, request, format=None):
@@ -56,7 +76,7 @@ class UserDetail(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+"""
 
 # 로그인을 했는지 안했는지 알아보기위해 홈화면 간단하게 구성
 def home(request):
