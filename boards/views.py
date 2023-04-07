@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -13,9 +13,33 @@ from .models import Board, Comment
 from .forms import BoardForm, CommentForm
 from accounts.models import User
 from django.core.paginator import Paginator
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 
 
+class BoardFilter(FilterSet):
+    writer = filters.CharFilter(method='filter_user')
+    contents = filters.CharFilter(field_name='contents', lookup_expr='icontains')
+
+    class Meta:
+        model = Board
+        fields = ['writer', 'contents']
+
+    def filter_user(self, queryset, name, value):
+        return queryset.filter(**{
+            name: value,
+        })
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+
+
+class BoardViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    serializer_class = BoardSerializer
+    queryset = Board.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BoardFilter
 
 """
 class BoardList(APIView):
