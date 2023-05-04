@@ -3,13 +3,16 @@ from .models import User
 from .forms import LoginForm
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
-from django.http import Http404
 from rest_framework import status, viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import UserSerializer
 from django_filters import rest_framework as filters, FilterSet
-from django_filters.rest_framework import DjangoFilterBackend
+from django.core import serializers
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+
+
 
 
 class UserViewSet(viewsets.ModelViewSet):

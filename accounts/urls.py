@@ -13,5 +13,6 @@ urlpatterns = [
     # path('api/', views.UserList.as_view()),
     # path('api/<int:pk>/', views.UserDetail.as_view()),
     path('api/', include(router.urls)),
+    # path('posts/', views.posts, name='posts'),
 ]
 
