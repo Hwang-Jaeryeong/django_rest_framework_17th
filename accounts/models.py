@@ -1,20 +1,53 @@
+import uuid
+
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
 
-class User(models.Model):  # 1
-    # 유니크 제약 조건 사용 추가
-    username = models.CharField(max_length=255, unique=True)
-    useremail = models.EmailField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-    # user가 생성된 바로 그 시간에 저장됨
-    created_at = models.DateTimeField(auto_now_add=True)
-    # auto_now=True는 수정된 시간을 나타냄(board 모델 작성할 때 쓰이게 됨)
-    updated_at = models.DateTimeField(auto_now=True)
+class UserManager(BaseUserManager):
 
-    def __str__(self): # 2
+    def create_user(self, username, password, nickname, **extra_fields):
+        if not username:
+            raise ValueError('username Required!')
+
+        user = self.model(
+            username=username,
+            nickname=nickname,
+            **extra_fields
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, password, nickname=None):
+        user = self.create_user(username, password, nickname)
+
+        user.is_superuser = True
+        user.is_staff = True
+        user.level = 0
+
+        user.save(using=self._db)
+        return user
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    objects = UserManager()
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    username = models.CharField(max_length=17, verbose_name="아이디", unique=True)
+    nickname = models.CharField(max_length=100, verbose_name="이름", null=True)
+    date_joined = models.DateTimeField(auto_now_add=True, verbose_name='가입일', null=True, blank=True)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+    # 유저 대학교
+
+    def __str__(self):
         return self.username
-
-    class Meta: # 3
-        db_table = 'community_user'
-        verbose_name = '커뮤니티 사용자'
-        verbose_name_plural = '커뮤니티 사용자'

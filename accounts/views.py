@@ -21,7 +21,7 @@ class UserFilter(FilterSet):
 
     class Meta:
         model = User
-        fields = ['username', 'useremail']
+        fields = ['username',]
 
     def filter_user(self, queryset, name, value):
         return queryset.filter(**{
@@ -97,7 +97,7 @@ def register(request):
 
     elif request.method == 'POST':
         username = request.POST.get('username', None)
-        useremail = request.POST.get('useremail', None)
+        #useremail = request.POST.get('useremail', None)
         password = request.POST.get('password', None)
         re_password = request.POST.get('re_password', None)
 
