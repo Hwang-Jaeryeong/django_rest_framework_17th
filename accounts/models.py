@@ -1,8 +1,5 @@
-#models.py
-
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-
 
 class UserManager(BaseUserManager):
 
@@ -51,4 +48,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     # 유저 대학교
 
     def __str__(self):
-        return self.username
+        return self.username 

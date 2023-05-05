@@ -180,7 +180,7 @@ class RegisterAPIView(APIView):
 class AuthView(APIView):
  serializer_class = LoginSerializer
 
- def post(self, request):
+ def post(self, request, username=None):
      serializer = self.serializer_class(data=request.data)
 
      if serializer.is_valid(raise_exception=False):
