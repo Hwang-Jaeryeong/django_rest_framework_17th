@@ -1,4 +1,4 @@
-import uuid
+#models.py
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
@@ -34,7 +34,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, max_length=17, verbose_name="id", unique=True)
 
     username = models.CharField(max_length=17, verbose_name="아이디", unique=True)
     nickname = models.CharField(max_length=100, verbose_name="이름", null=True)

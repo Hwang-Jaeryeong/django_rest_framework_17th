@@ -1,15 +1,20 @@
+
+from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
+from rest_framework.views import APIView
+
 from .models import User
 from .forms import LoginForm
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework import status, viewsets
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LoginSerializer
 from django_filters import rest_framework as filters, FilterSet
 from django.core import serializers
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.response import Response
 
 
 
@@ -93,7 +98,7 @@ def home(request):
     else:
         return HttpResponse("로그인 후 이용해주세요!")
 
-def register(request):
+def register(request, useremail=None):
     if request.method == 'GET':
         return render(request, 'register.html')
 
@@ -135,3 +140,63 @@ def logout(request):
     if request.session.filter('user'):
         del (request.session['user'])
     return redirect('/')
+
+
+class TokenObtainPairSerializer:
+    pass
+
+
+class RegisterSerializer:
+    pass
+
+"""
+class RegisterAPIView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token = TokenObtainPairSerializer.get_token(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+            res = Response(
+                {
+                    "user": serializer.data,
+                    "message": "register successs",
+                    "token": {
+                        "access": access_token,
+                        "refresh": refresh_token,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+            res.set_cookie("access", access_token, httponly=True)
+            res.set_cookie("refresh", refresh_token, httponly=True)
+            return res
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    """
+
+
+
+class AuthView(APIView):
+ serializer_class = LoginSerializer
+
+ def post(self, request):
+     serializer = self.serializer_class(data=request.data)
+
+     if serializer.is_valid(raise_exception=False):
+         id = serializer.validated_data['id']
+         access = serializer.validated_data['access']
+         refresh = serializer.validated_data['refresh']
+         # data = serializer.validated_data
+         res = Response(
+             {
+                 "message": "로그인되었습니다.",
+                 "id": id,
+                 "access": access,
+                 "refresh": refresh
+             },
+             status=status.HTTP_200_OK,
+         )
+         return res
+
+     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
