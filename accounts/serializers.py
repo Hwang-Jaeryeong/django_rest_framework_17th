@@ -41,7 +41,8 @@ class LoginSerializer(serializers.Serializer):
      data = {
          'id': user.username,
          'refresh': refresh,
-         'access': access
+         'access': access,
+         'token': token
      }
 
      return data

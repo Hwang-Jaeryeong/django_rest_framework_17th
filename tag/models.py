@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Tag(models.Model):
-    name =models.CharField(max_length=100, verbose_name='태그명')
+    name = models.CharField(max_length=255, verbose_name='태그명')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'tag',
     'timetable',
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 
