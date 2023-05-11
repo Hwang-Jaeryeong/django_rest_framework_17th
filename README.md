@@ -365,4 +365,83 @@ data를 이렇게 반환해주니 user를 찾지 못하는 에러는 해결되�
 
 ----------
 ## 5주차 : AWS : EC2, RDS & Docker & Github Action
+### 로컬에서 Docker로 서버와 DB 실행
 
+- 도커 빌드
+  ```shell
+  docker-compose -f docker-compose.yml up --build
+  ```
+  
+- 브라우저 접속 테스트 -> 잘 된다 !
+![img_7.png](img_7.png)
+- 도커 다운
+  ```shell
+  docker-compose -f docker-compose.prod.yml down -v
+  ```
+  or
+  ```shell
+  Ctrl+c
+  
+  docker-compose down
+  ```
+  
+### 실 환경 배포
+1. EC2 생성 & 탄력적 IP 할당
+![img_8.png](img_8.png)
+
+2. RDS 생성
+![img_9.png](img_9.png)
+
+- time zone seoul 설정
+- character set utf8mb4로 변경 : 여기서 은근 에러가 오래 났습니다 ...
+- 접속 확인
+  - 명령어
+    ```bash
+    mysql -h <host 주소> -u <유저네임> -p
+    ```
+    
+3. production env 파일 설정
+  ```shell
+  DATABASE_HOST={RDS db 주소}
+  DATABASE_DB=mysql
+  DATABASE_NAME={RDS 기본 database 이름}
+  DATABASE_USER={RDS User 이름}
+  DATABASE_PASSWORD={RDS master 비밀번호}
+  DATABASE_PORT=3306
+  DEBUG=False
+  DJANGO_ALLOWED_HOSTS={EC2 서버 ip 주소}
+  DJANGO_SECRET_KEY={django secret key}
+  ```
+
+4. Gihub Action 설정
+![img_10.png](img_10.png)
+
+5. Action을 통한 자동 배포 확인
+![img_11.png](img_11.png)
+![img_12.png](img_12.png)
+
+
+### 배포된 EC2 DNS 주소로 요청해보기
+
+- `POST http://ec2-54-180-52-93.ap-northeast-2.compute.amazonaws.com/accounts/auth/`
+![img_13.png](img_13.png)
+
+
+----
+### 에러 해결
+
+- web  | django.db.utils.OperationalError: (1366, "Incorrect string value: '\\xEC\\xBB\\xA4\\xEB\\xAE\\xA4...' for column 'name' at row 1")
+: 로컬에서 테스트할 때 진짜 이 에러가 너무 많이 났었는데 my.ini 파일을 변경하고 DATABASE에 option을 추가해주니 쉽게 해결되었다.
+`mysql> SHOW VARIABLES LIKE 'character_set_server';`
+
+| character_set_server | utf8mb4 |
+-> 해당 결과를 보면 MySQL 서버의 character_set_server 변수가 utf8mb4로 설정되어 있는 것을 확인가능
+
+- 다 완료한 후 postman에서 테스트하려고 주소를 입력했는데 안되길래 찾아봤는데 바보같이 migration을 안했더라구요 .. 해주니까 바로 됐습니다 !
+  * migration 빼먹지 말고 꼭꼭 해주기
+
+----
+### 회고
+발생했던 에러 중에 로컬에서 docker를 돌리고 해결할 수 있는 것들이 있었는데 이걸 readme 작성하면서 알게 되어서 좀 아쉽다.
+익숙하지 않아서 좀 어려웠는데 그래도 하다 보니 재미있었다 !! 오류 발생할 때마다 여러 레퍼런스들 찾아보면서 공부도 많이 된 과제였던 거 같다.
+에러 해결될때마다 스스로 넘 뿌듯했다 ^___^ .. ㅎㅎ
