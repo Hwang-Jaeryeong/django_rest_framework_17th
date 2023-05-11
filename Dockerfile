@@ -1,6 +1,7 @@
 FROM python:3.8.3-alpine
 ENV PYTHONUNBUFFERED 1
 
+RUN apk --no-cache --update add libffi-dev
 RUN mkdir /app
 WORKDIR /app
 
@@ -17,3 +18,4 @@ RUN pip install -r requirements.txt
 
 # Now copy in our code, and run it
 COPY . /app/
+
