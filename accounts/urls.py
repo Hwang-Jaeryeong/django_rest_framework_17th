@@ -2,7 +2,6 @@ from django.urls import path, include
 from .views import register, login, logout, UserViewSet, AuthView
 from . import views
 from rest_framework import routers
-from health_check.management.commands import health_check
 
 router = routers.DefaultRouter()
 router.register(r'user', UserViewSet)
@@ -15,6 +14,5 @@ urlpatterns = [
     # path('api/<int:pk>/', views.UserDetail.as_view()),
     # path('api/', include(router.urls)),
     path("auth/", AuthView.as_view()),
-    path('accounts/auth/', health_check, name='health_check'),
 ]
 
