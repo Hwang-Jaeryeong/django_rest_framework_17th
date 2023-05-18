@@ -15,6 +15,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.response import Response
+from django.http import HttpResponseNotAllowed
 
 
 
@@ -187,7 +188,6 @@ class AuthView(APIView):
          id = serializer.validated_data['id']
          access = serializer.validated_data['access']
          refresh = serializer.validated_data['refresh']
-         # data = serializer.validated_data
          res = Response(
              {
                  "message": "로그인되었습니다.",
@@ -200,3 +200,10 @@ class AuthView(APIView):
          return res
 
      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def health_check(request):
+    if request.method == 'POST':
+        # POST 요청 처리 로직 작성
+        return HttpResponse("OK")
+    else:
+        return HttpResponseNotAllowed(['POST'])
