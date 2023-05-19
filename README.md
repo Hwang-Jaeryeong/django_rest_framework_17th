@@ -447,3 +447,63 @@ data를 이렇게 반환해주니 user를 찾지 못하는 에러는 해결되�
 에러 해결될때마다 스스로 넘 뿌듯했다 ^___^ .. ㅎㅎ
 
 그리고 정말 바보같이 .env.prod 파일을 그대로 올려버리고 나가서 나가있는 내내 살짝 불안했었다 앞으로 다신 이런 실수 안해야지 ㅎ
+
+
+----
+## 6주차 : AWS : https 인증
+HTTPS := HTTP + (Secure Socket Layer(SSL) | Transport Layer Security(TLS))
+
+`SSL` 
+ - 웹사이트와 브라우저 사이에 전송되는 데이터를 암호화하여 인터넷 연결 보호
+![img_22.png](img_22.png)
+ - 통신을 위해선 핸드쉐이크-> 세션-> 세션 종료
+
+`TLS`
+- SSL의 더욱 안전한 버전
+
+### https 구현
+![img_23.png](img_23.png)
+- 443 포트로 들어오는 HTTPS 요청을 처리
+- 80 포트로 들어오는 HTTP 요청을 443 포트로 리다이렉트
+
+
+### 1) AWS의 Route 53에서 원하는 도메인을 구입
+![img_14.png](img_14.png)
+
+### 2) AWS의 Certificate Manager에서 원하는 도메인에 대한 SSL 인증서를 받기
+#### Route 53에 레코드 생성
+![img_15.png](img_15.png)
+
+### 3) EC2 인스턴스에 대해 로드밸런서 등록
+![img_16.png](img_16.png)
+
+### 4) 로드밸런서를 AWS Route 53의 도메인의 레코드에 등록
+
+![img_20.png](img_20.png)
+
+- A 레코드 등록
+
+### 5) EC2 인바운드 규칙 443 추가
+![img_19.png](img_19.png)
+
+
+** redirection 문제
+```angular2html
+if ($http_x_forwarded_proto = 'http'){
+        	return 301 https://$host$request_uri;
+        }
+```
+1) $http_x_forwarded_proto를 이용하여 로드벨런서로부터 들어온 프로토콜이 http인지 확인
+2) 이후 http로 들어온 요청이라면 https://호스트/요청 uri 형식으로 https주소로 리다이렉션
+3) HTTP와 HTTPS일때 모두 HTTPS로 잘 동작하는 웹서버를 구동시킬 수 있다
+- AWS : HTTP에서 HTTPS로 redirection 설정하기
+- ![img_21.png](img_21.png)
+
+
+----
+### 회고
+
+- 정보통신공학에서 배운 내용들이 은근 많이 나왔다
+- 서버를 처음 사보고 등록해보는 과정이 재밌었다!
+- postman에서 요청 보낸 게 계속 에러가 떴지만 ... 그 해결방법을 찾아보는 과정에서 도움을 많이 받았던 것 같다
+- 그치만 .. nginx 코드도 확인해보고 .env.prod 파일도 확인해보고 로드밸런서 unhealthy 문제도 해결해보았지만 포스트맨 에러는 결국 그대로 ^__^
