@@ -499,6 +499,8 @@ if ($http_x_forwarded_proto = 'http'){
 - AWS : HTTP에서 HTTPS로 redirection 설정하기
 - ![img_21.png](img_21.png)
 
+![img_24.png](img_24.png)
+
 
 ----
 ### 회고
